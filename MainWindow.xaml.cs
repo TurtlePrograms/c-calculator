@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,7 +31,17 @@ namespace Rekenmachine
 
         private void UpdateEquation()
         {
-            ResultTextBox.Text = currentEquation;
+            if (currentEquation.Contains("NaN"))
+            {
+                ResultTextBox.Text = "Error";
+                currentEquation = "";
+            }
+            else
+            {
+                // Update the text box with the current equation
+                ResultTextBox.Text = currentEquation;
+            }
+            
         }
 
         private void Number_Click(object sender, RoutedEventArgs e)
@@ -48,6 +61,7 @@ namespace Rekenmachine
         private void Decimal_Click(object sender, RoutedEventArgs e)
         {
             string currentNumber = SplitEquation().Last();
+            Console.WriteLine(currentNumber);
             if (!currentNumber.Contains('.'))
             {
                 currentEquation += ".";
@@ -58,14 +72,53 @@ namespace Rekenmachine
         private void Operator_Click(object sender, RoutedEventArgs e)
         {
             string newOperator = (string)((Button)sender).Content;
-
+            if (newOperator == "(" || newOperator == ")")
+            {
+                currentEquation += newOperator;
+                UpdateEquation();
+                return;
+            }
+            if (newOperator == "×")
+            {
+                newOperator = "*";
+            }
+            
+            if (currentEquation.Length == 0)
+            {
+                return;
+            }
+            string lastChar = currentEquation.Substring(currentEquation.Length - 1);
+            if (lastChar == "*" || lastChar == "+" || lastChar == "-" || lastChar == "/")
+            {
+                return;
+            }
             currentEquation += newOperator;
             UpdateEquation();
         }
 
         private void Equals_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(currentEquation);
+            int count1 = currentEquation.Length - currentEquation.Replace("(", "").Length;
+            int count2 = currentEquation.Length - currentEquation.Replace(")", "").Length;
+            if (count1 != count2)
+            {
+                currentEquation = Convert.ToString(Double.NaN);
+                UpdateEquation();
+                return;
+            }
+            DataTable dt = new DataTable();
+            try
+            {
+                string result = dt.Compute(currentEquation, "").ToString();
+                currentEquation = result;
+                UpdateEquation();
+            }
+            catch (SyntaxErrorException)
+            {
+                currentEquation = Convert.ToString(Double.NaN);
+                UpdateEquation();
+            }
+            
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
@@ -99,8 +152,34 @@ namespace Rekenmachine
             UpdateEquation();
         
         }
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentEquation.Length > 0)
+            {
+                currentEquation = currentEquation.Substring(0, currentEquation.Length - 1);
+                UpdateEquation();
+            }
+        }
+        
+    }
+    public class WindowSizeToFontSizeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is double windowWidth)
+            {
+                // Calculate font size based on window width
+                double fontSize = windowWidth / 30; // Adjust this value as needed
+                return fontSize;
+            }
 
-    
+            return DependencyProperty.UnsetValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

@@ -21,15 +21,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Result display -->
-        <TextBox x:Name="ResultTextBox" Grid.Row="1" Text="0" HorizontalContentAlignment="Right" FontSize="36" VerticalAlignment="Bottom" Margin="10" Grid.ColumnSpan="4"/>
+        <TextBox x:Name="ResultTextBox" Grid.Row="0" Text="0" HorizontalContentAlignment="Right" FontSize="36" VerticalAlignment="Bottom" Margin="10" Grid.ColumnSpan="4"/>
 
         <!-- Buttons -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -46,7 +45,7 @@
             <Button Grid.Row="0" Grid.Column="0" Content="7" Click="Number_Click"/>
             <Button Grid.Row="0" Grid.Column="1" Content="8" Click="Number_Click"/>
             <Button Grid.Row="0" Grid.Column="2" Content="9" Click="Number_Click"/>
-            <Button Grid.Row="0" Grid.Column="3" Content="÷" Click="Operator_Click"/>
+            <Button Grid.Row="0" Grid.Column="3" Content="/" Click="Operator_Click"/>
             <Button Grid.Row="1" Grid.Column="0" Content="4" Click="Number_Click"/>
             <Button Grid.Row="1" Grid.Column="1" Content="5" Click="Number_Click"/>
             <Button Grid.Row="1" Grid.Column="2" Content="6" Click="Number_Click"/>
@@ -57,10 +56,14 @@
             <Button Grid.Row="2" Grid.Column="3" Content="-" Click="Operator_Click"/>
             <Button Grid.Row="3" Grid.Column="0" Content="0" Click="Number_Click"/>
             <Button Grid.Row="3" Grid.Column="1" Content="." Click="Decimal_Click"/>
-            <Button Grid.Row="3" Grid.Column="2" Content="C" Click="Clear_Click"/>
+            <Button Grid.Row="3" Grid.Column="2" Content="CL" Click="Clear_Click"/>
             <Button Grid.Row="3" Grid.Column="3" Content="+" Click="Operator_Click"/>
             <Button Grid.Row="4" Grid.Column="0" Content="±" Click="Negate_Click"/>
             <Button Grid.Row="4" Grid.Column="1" Content="=" Click="Equals_Click"/>
+            <Button Grid.Row="4" Grid.Column="2" Content="(" Click="Operator_Click"/>
+            <Button Grid.Row="4" Grid.Column="3" Content=")" Click="Operator_Click"/>
+            <Button Grid.Row="5" Grid.Column="0" Content="del" Click="Back_Click"/>
+
         </Grid>
     </Grid>
 </Window>
