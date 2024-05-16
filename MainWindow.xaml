@@ -10,10 +10,12 @@
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="FontFamily" Value="{StaticResource CustomFont}"/>
+            <Setter Property="FontSize" Value="32"/>
         </Style>
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="{StaticResource CustomFont}"/>
-            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontSize" Value="32"/>
+            
         </Style>
 
     </Window.Resources>
@@ -30,18 +32,20 @@
         <!-- Buttons -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" MinHeight="50"/>
+                <RowDefinition Height="*" MinHeight="50"/>
+                <RowDefinition Height="*" MinHeight="50"/>
+                <RowDefinition Height="*" MinHeight="50"/>
+                <RowDefinition Height="*" MinHeight="50"/>
+                <RowDefinition Height="*" MinHeight="50"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" MinWidth="50" />
+                <ColumnDefinition Width="*" MinWidth="50"/>
+                <ColumnDefinition Width="*" MinWidth="50"/>
+                <ColumnDefinition Width="*" MinWidth="50"/>
             </Grid.ColumnDefinitions>
+            
             <Button Grid.Row="0" Grid.Column="0" Content="7" Click="Number_Click"/>
             <Button Grid.Row="0" Grid.Column="1" Content="8" Click="Number_Click"/>
             <Button Grid.Row="0" Grid.Column="2" Content="9" Click="Number_Click"/>

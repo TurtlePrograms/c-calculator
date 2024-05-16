@@ -27,6 +27,13 @@ namespace Rekenmachine
         public MainWindow()
         {
             InitializeComponent();
+            this.SizeChanged += MainWindow_SizeChanged;
+        }
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            int width = (int)e.NewSize.Width;
+            int height = (int)e.NewSize.Height;
+
         }
 
         private void UpdateEquation()
@@ -41,7 +48,7 @@ namespace Rekenmachine
                 // Update the text box with the current equation
                 ResultTextBox.Text = currentEquation;
             }
-            
+
         }
 
         private void Number_Click(object sender, RoutedEventArgs e)
@@ -82,7 +89,7 @@ namespace Rekenmachine
             {
                 newOperator = "*";
             }
-            
+
             if (currentEquation.Length == 0)
             {
                 return;
@@ -118,7 +125,7 @@ namespace Rekenmachine
                 currentEquation = Convert.ToString(Double.NaN);
                 UpdateEquation();
             }
-            
+
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
@@ -132,7 +139,7 @@ namespace Rekenmachine
             // Regular expression to match the last number in the string
             string pattern = @"(?<![\d.])-?\d+(\.\d+)?$";
             Match match = Regex.Match(currentEquation, pattern);
-            string toggledNumber = "";
+            string toggledNumber ;
             if (match.Success)
             {
                 string lastNumber = match.Value;
@@ -150,7 +157,7 @@ namespace Rekenmachine
 
 
             UpdateEquation();
-        
+
         }
         private void Back_Click(object sender, RoutedEventArgs e)
         {
@@ -159,26 +166,6 @@ namespace Rekenmachine
                 currentEquation = currentEquation.Substring(0, currentEquation.Length - 1);
                 UpdateEquation();
             }
-        }
-        
-    }
-    public class WindowSizeToFontSizeConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is double windowWidth)
-            {
-                // Calculate font size based on window width
-                double fontSize = windowWidth / 30; // Adjust this value as needed
-                return fontSize;
-            }
-
-            return DependencyProperty.UnsetValue;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }
