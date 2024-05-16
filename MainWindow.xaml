@@ -13,7 +13,9 @@
         </Style>
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="{StaticResource CustomFont}"/>
+            <Setter Property="FontSize" Value="15"/>
         </Style>
+
     </Window.Resources>
 
     <Grid>
@@ -22,9 +24,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <!-- Equation display -->
-        <TextBlock x:Name="EquationTextBlock" Grid.Row="0" Text="0" HorizontalAlignment="Right" FontSize="18" Margin="10"/>
 
         <!-- Result display -->
         <TextBox x:Name="ResultTextBox" Grid.Row="1" Text="0" HorizontalContentAlignment="Right" FontSize="36" VerticalAlignment="Bottom" Margin="10" Grid.ColumnSpan="4"/>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,49 +14,44 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Rekenmachine
 {
     public partial class MainWindow : Window
     {
-        private double currentNumber = 0;
-        private double result = 0;
-        private string currentOperator = "";
-        private bool isNewNumber = true;
-        private StringBuilder equationBuilder = new StringBuilder();
+        private string currentEquation = "";
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        private void UpdateEquation()
+        {
+            ResultTextBox.Text = currentEquation;
+        }
+
         private void Number_Click(object sender, RoutedEventArgs e)
         {
             string number = (string)((Button)sender).Content;
 
-            if (isNewNumber)
-            {
-                ResultTextBox.Text = number;
-                isNewNumber = false;
-            }
-            else
-            {
-                if (ResultTextBox.Text == "0")
-                    ResultTextBox.Text = number;
-                else
-                    ResultTextBox.Text += number;
-            }
+            currentEquation += number;
+            UpdateEquation();
+        }
 
-            equationBuilder.Append(number);
-            EquationTextBlock.Text = equationBuilder.ToString();
+        private string[] SplitEquation()
+        {
+            string[] numbers = currentEquation.Split('×', '+', '-', '/');
+            return numbers;
         }
 
         private void Decimal_Click(object sender, RoutedEventArgs e)
         {
-            if (!ResultTextBox.Text.Contains("."))
+            string currentNumber = SplitEquation().Last();
+            if (!currentNumber.Contains('.'))
             {
-                ResultTextBox.Text += ".";
-                equationBuilder.Append(".");
-                EquationTextBlock.Text = equationBuilder.ToString();
+                currentEquation += ".";
+                UpdateEquation();
             }
         }
 
@@ -63,72 +59,48 @@ namespace Rekenmachine
         {
             string newOperator = (string)((Button)sender).Content;
 
-            if (!isNewNumber)
-            {
-                Equals_Click(null, null);
-                isNewNumber = true;
-            }
-
-            equationBuilder.Append(" ");
-            equationBuilder.Append(newOperator);
-            equationBuilder.Append(" ");
-            EquationTextBlock.Text = equationBuilder.ToString();
-
-            currentOperator = newOperator;
-            currentNumber = double.Parse(ResultTextBox.Text);
+            currentEquation += newOperator;
+            UpdateEquation();
         }
 
         private void Equals_Click(object sender, RoutedEventArgs e)
         {
-            double newNumber = double.Parse(ResultTextBox.Text);
-
-            switch (currentOperator)
-            {
-                case "+":
-                    result = result + newNumber;
-                    break;
-                case "-":
-                    result = result - newNumber;
-                    break;
-                case "×":
-                    result = result * newNumber;
-                    break;
-                case "÷":
-                    if (newNumber != 0)
-                        result = result / newNumber;
-                    else
-                        MessageBox.Show("Cannot divide by zero.");
-                    break;
-                default:
-                    result = newNumber;
-                    break;
-            }
-
-            ResultTextBox.Text = result.ToString();
-            isNewNumber = true;
-            equationBuilder.Clear();
-            equationBuilder.Append(result.ToString());
-            EquationTextBlock.Text = equationBuilder.ToString();
+            Console.WriteLine(currentEquation);
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            ResultTextBox.Text = "0";
-            currentNumber = 0;
-            result = 0;
-            currentOperator = "";
-            isNewNumber = true;
-            equationBuilder.Clear();
-            EquationTextBlock.Text = "0";
+            currentEquation = "";
+            UpdateEquation();
         }
 
         private void Negate_Click(object sender, RoutedEventArgs e)
         {
-            if (ResultTextBox.Text != "0")
+            // Regular expression to match the last number in the string
+            string pattern = @"(?<![\d.])-?\d+(\.\d+)?$";
+            Match match = Regex.Match(currentEquation, pattern);
+            string toggledNumber = "";
+            if (match.Success)
             {
-                double number = double.Parse(ResultTextBox.Text);
-                ResultTextBox.Text = (-number).ToString();
+                string lastNumber = match.Value;
+                if (lastNumber.StartsWith("-"))
+                {
+                    toggledNumber = lastNumber.Substring(1); // Remove the negative sign
+                }
+                else
+                {
+                    toggledNumber = "-" + lastNumber; // Add the negative sign
+                }
+                // Handle edge cases to avoid combining numbers incorrectly
+                currentEquation = currentEquation.Substring(0, match.Index) + toggledNumber;
             }
+
+
+            UpdateEquation();
+        
         }
+
+    
     }
 }
+
