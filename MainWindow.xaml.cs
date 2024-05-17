@@ -27,14 +27,9 @@ namespace Rekenmachine
         public MainWindow()
         {
             InitializeComponent();
-            this.SizeChanged += MainWindow_SizeChanged;
+           
         }
-        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            int width = (int)e.NewSize.Width;
-            int height = (int)e.NewSize.Height;
-
-        }
+       
 
         private void UpdateEquation()
         {
@@ -46,7 +41,7 @@ namespace Rekenmachine
             else
             {
                 // Update the text box with the current equation
-                ResultTextBox.Text = currentEquation;
+                ResultTextBox.Text = currentEquation.Replace('*', '×');
             }
 
         }
@@ -68,7 +63,7 @@ namespace Rekenmachine
         private void Decimal_Click(object sender, RoutedEventArgs e)
         {
             string currentNumber = SplitEquation().Last();
-            Console.WriteLine(currentNumber);
+           
             if (!currentNumber.Contains('.'))
             {
                 currentEquation += ".";
@@ -117,7 +112,12 @@ namespace Rekenmachine
             try
             {
                 string result = dt.Compute(currentEquation, "").ToString();
+                //limit the number of decimal places to 2
+                result = Convert.ToDouble(result).ToString("0.##");
+
+
                 currentEquation = result;
+          
                 UpdateEquation();
             }
             catch (SyntaxErrorException)
@@ -139,7 +139,7 @@ namespace Rekenmachine
             // Regular expression to match the last number in the string
             string pattern = @"(?<![\d.])-?\d+(\.\d+)?$";
             Match match = Regex.Match(currentEquation, pattern);
-            string toggledNumber ;
+            string toggledNumber;
             if (match.Success)
             {
                 string lastNumber = match.Value;
@@ -154,6 +154,7 @@ namespace Rekenmachine
                 // Handle edge cases to avoid combining numbers incorrectly
                 currentEquation = currentEquation.Substring(0, match.Index) + toggledNumber;
             }
+
 
 
             UpdateEquation();
